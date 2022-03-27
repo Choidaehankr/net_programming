@@ -10,4 +10,4 @@ while True:
     client, addr = s.accept()
     print('connection from ', addr)
     client.send(time.ctime(time.time()).encode())
-    client.close()
+    client.close() 
