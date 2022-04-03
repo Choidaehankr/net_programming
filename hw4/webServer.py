@@ -5,6 +5,7 @@ s = socket()
 s.bind(('', 80))
 s.listen(10)
 
+errorMsg =  'HTTP/1.1 404 Not Found\r\n' + '\r\n' + '<HTML><HEAD><TITLE>Not Found</TITLE></HEAD>' +'<BODY>Not Found</BODY></HTML>'
 while True:
     print("waiting...")
     c, addr = s.accept()
@@ -36,7 +37,7 @@ while True:
         recvMsg = icoFile.read()
         c.send(recvMsg)
     else:
-        c.send('HTTP/1.1 404 Not Found\r\n' + '\r\n' + '<HTML><HEAD><TITLE>404 Not Found</TITLE></HEAD>' + '<BODY>This is error message.</BODY></HTML>')
+        c.send(errorMsg.encode())
     c.close()
     #exit()
 
