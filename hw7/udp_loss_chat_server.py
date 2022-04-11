@@ -1,3 +1,4 @@
+from base64 import encode
 from socket import *
 import random
 import time
@@ -12,14 +13,15 @@ while True:
     sock.settimeout(None)
     while True:
         data, addr = sock.recvfrom(BUFF_SIZE)
-        print('data: ', data.decode())
-        if random.random() <= 0.5:
+        if(data.decode() == 'fail'):
+            sock.sendto(b'nack', addr)
+            break
+        elif random.random() <= 0.7:
             continue
         else:
             sock.sendto(b'ack', addr)
             print('<-', data.decode())
             break
-
     msg = input('-> ')
     reTx = 0
     while reTx <= 3:
@@ -33,3 +35,15 @@ while True:
             continue
         else:
             break
+    if reTx > 3:
+        # print('time out!')
+        sock.sendto(b'fail', addr)
+        sock.settimeout(None)
+        while True:
+            try:
+                tmpD, tmpA = sock.recvfrom(BUFF_SIZE)
+            except timeout:
+                break
+            if tmpD.decode() == 'nack':
+                print('I received a NACK!')
+                break
