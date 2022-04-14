@@ -1,0 +1,31 @@
+문자열은 수정 불가
+
+word[2] = 'b' 안됨
+
+str.upper()
+str.lower()
+str.swapcase() : 대소문자 바꾸기
+str.title(): 첫 글자만 대문자로 변환
+
+str.count('i') : i의 개수 
+str.find('o'): 'o'의 처음 위치. 없으면 -1
+ -> rfind('o'): 'o'가 마지막으로 나오는 위치
+str.index('on'): 문자열에서 'on'의 처음 위치. 없으면 ValueError
+
+x = 'a bc'
+x.split()
+ -> ['a', 'bc']
+
+ str = '   hello   '
+ str.strip(): 양 쪽 공백 제거
+ str.rstrip(): 오른쪽 공백 제거, lstrip(): 왼쪽 공백 제거
+
+    문자열 결합
+'*'.join('hello')
+ >> h*e*l*l*O
+
+    문자열 채우기
+'12'.zfill(5)
+ >> 00012
+ : '12'의 왼쪽을 0으로 채워 5자리로 만든다.
+
