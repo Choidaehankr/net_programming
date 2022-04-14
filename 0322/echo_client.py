@@ -11,6 +11,6 @@ while True:
     msg = input("Message to send: ")
     s.send(msg.encode())
     data = s.recv(BUFSIZE)
-    print("Received message: %s" % data.decode())
+    print("Received message: ", data.decode())
 
 s.close()
