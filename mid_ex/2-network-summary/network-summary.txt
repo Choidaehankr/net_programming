@@ -34,6 +34,9 @@ for x in net.hosts():
 
 socket.gethostname()  # 실행 중인 호스트 이름을 반환
 socket.gethostbyname(hostname) # hostname을 IPv4 주소로 반환
+socket.gethostbyname_ex(hostname) # hostname을 IPv4 주소로 변환하고 추가 정보를 제공
+socket.gethostbyaddr(ip_address) ip_address에 대한 호스트 정보 반환
+socket.getfqdn(name) name에 대한 정규화된 도메인 이름을 반환
 ...
 기타 등등
 
@@ -62,3 +65,7 @@ socket.gethostbyname(hostname) # hostname을 IPv4 주소로 반환
 왜 바이트 순서 변환?
  -빅 엔디언을 사용하는 호스트에서 리틀 엔디언을 사용하는 호스트로 데이터 전송 시 문제 발생
  
+ -동작
+    -호스트는 데이터 전송 시 네트워크 바이트 순서(빅 엔디언)로 변환해서 전송
+    -호스트는 데이터 수신 시 호스트 바이트 순서(빅 또는 리틀 엔디언)로 변환해서 데이터 사용
+
