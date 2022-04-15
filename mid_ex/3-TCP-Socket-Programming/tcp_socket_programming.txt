@@ -40,3 +40,104 @@ s = socket.socket(addr_family, type)
  -> 일반적으로 주소는 지정하지 않음.
  -> IP 주소가 여러개인 경우 특정 IP 주소 지정 가능
 
+
+    13p. TCP 서버
+
+client, addr = s.accept()
+
+클라이언트와 통신할 수 있게 해주는 서버 쪽 새로운 소켓이 생기는데, 위의 client와 통신을 해야한다.
+
+    14p.
+send() 안에는 bytes객체만 들어올 수 있다.
+ ex) b'hello', 'hello'.encode()로 전송 가능
+
+---> 반대측에선 decode() 후 사용
+
+
+    19p. send(), recv() 함수
+
+ 소켓.send(bytes)
+: 데이터를 송신하기 전에 bytes 형으로 변환 필요 (encode())
+: 전송된 바이트 수를 반환
+
+ 소켓.recv(bufsize)
+: 최대 bufsize 만큼의 데이터를 수신
+: 수신된 데이터를 나타내는 bytes 데이터를 반환
+ -> 수신 후 원래 데이터 형태로 변환 필요 (decode())
+
+
+ 문자열 송수신
+-전송 시, encode()
+-수신 시, decode()
+
+ 정수 송수신
+1. 문자열로 변경한 후 송신. 수신 후 다시 정수로 변경
+ 장점 : '엔디언'고려할 필요 없음
+
+-정수를 문자열: str() -> 문자열을 bytes: 문자열.encode()
+-recv()후, bytes를 문자열로 decode() -> 문자열을 정수로 int()
+
+
+2. int <- -> bytes 직접 변환
+ -int.to_bytes(length, byteorder, signed=False) : 송신
+  : 원하는 길이의 정수를 나타내는 bytes 객체를 돌려줌
+  : byteorder = 'big' or 'little' (endian)
+  : signed = 부호 여부
+
+예) (1).to_bytes(4, 'big') : '1'을 4바이트의 big endian
+ -> b'\x00\x00\x00\x01'
+
+    (1).to_bytes(2, 'little)
+ -> b'\x01\x00'
+
+ -int.from_bytes(bytes, byteorder, signed=False) : 수신
+ : bytes 객체가 무슨 byteorder로 돼있는지 적는 것. (일반적으로 'big'으로 들어옴)
+
+ -int.from_bytes(b'\x00\x00\x00\x01', 'big')  -> '1'
+ -int.from_bytes(b'\x01\x00', 'little') -> '1'
+
+
+    49p. 간단한 서버 생성 함수: create_server()
+
+sock = create_server(('', port), family=AF_INET, backlog=1) 
+                        = bind,     = socket,     = listen
+conn, (remotehost, remoteport) = sock.accept()
+
+
+    50p. 명령행 인자 에코 서버 프로그램
+
+예) python cmd_server.py 5555 (5555포트로 연결)
+
+
+    51p. argparse 모듈
+: 서버의 IP 주소와 포트 번호를 명령행 인자로 받음 (명령행 인자 여러개일 경우)
+
+ -ArgumentParser 객체 생성
+s = socket(AF_INET, SOCK_STREAM)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', default='localhost')
+parser.add_argument('-p', type=int, default=2500)
+args = parser.parse_args()
+
+    53p. Partial Writes/Reads
+-send()/recv() 함수의 문제점
+
+원하는 만큼 데이터를 다 송/수신하지 못할 수 있음.
+
+-send() 해결책: sendall() 함수 사용
+
+-recv() 해결책
+ : 수신할 데이터의 크기(data_size)를 알고 있다고 가정.
+ : 해당 데이터를 모두 수신할 때까지, 반복적으로 데이터 수신
+ex) 
+while rx_size < data_size:
+    data = s.recv(8192)
+    if not data:
+        break
+    rx_size += len(data
+
+
+    56p. 동영상 스트리밍하기
+opencv 다운로드 하자;;
+
