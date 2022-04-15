@@ -1,0 +1,20 @@
+cars.sort()  # 오름차순 정렬
+cars.sort(reverse=True)  # 내림차순 정렬
+
+cars.reverse()  # 리스트 요소 순서가 뒤바뀜. 
+
+
+    딕셔너리 정렬
+fruits = {'melon': 2, 'banana': 1, 'plum': 0, 'pear': 2, 'apple': 1}
+
+sorted(fruits)
+
+
+    75p. 가변 매개변수
+
+
+    89p. 모듈 사용 해보기!!! ㅋ
+
+
+    ** 문자열 뒤집기: str[::-1]
+    

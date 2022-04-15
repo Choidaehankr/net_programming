@@ -28,13 +28,36 @@
 
     # 10진수를 입력 받아 2진수로 변환하여 출력하는 프로그램. 8진수, 16진수 각? ㄷㄷ;
 
-n = int(input('Number: '))
-result = ''
+# n = int(input('Number: '))
+# result = ''
 
-while n != 0:
-    # m = n % 2
-    m = n % 8
-    result = str(m) + result
-    n = n // 8
+# while n != 0:
+#     # m = n % 2
+#     m = n % 8
+#     result = str(m) + result
+#     n = n // 8
 
-print(result)
+# print(result)
+
+# cars = ['bwm', 'audi', 'ferari']
+# cars.reverse()
+# print(cars)
+
+# str = 'hello iot'
+
+# fruits = {'melon': 2, 'banana': 1, 'plum': 0, 'pear': 0, 'apple': 1}
+ 
+# print(sorted(fruits))  # key값 기준 정렬
+# print(sorted(fruits, reverse=True))  # value 기준 정렬
+# # print(fruits)
+# fruits.pop('melon')  # 값 제거
+# print(fruits)
+
+# def total(*nums):  # 가변 매개변수
+#     sum = 0
+#     for n in nums:
+#         sum += n
+#     return sum
+
+# print(total(1,2,3,4,5,6,7,8,9,10))
+
