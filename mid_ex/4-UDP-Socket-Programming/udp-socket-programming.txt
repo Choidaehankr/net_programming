@@ -1,0 +1,67 @@
+        2p. UDP 소켓 프로그래밍
+연결 설정 과정 없음
+ -listen(), accept(), connect() 없
+
+ UDP 소켓 유형: SOCK_DGRAM
+-서버: 소켓 생성(socket()) 후 바인드(bind())
+-클라이언트: 소켓 생성(socket()) 후 송신
+
+송신: sendto(data, addr)
+수신: recvfrom(buffer_size)
+
+            * TCP에서 다중 사용자와 채팅 프로그램 구현...
+
+        5-6p. UDP 1:1 채팅 프로그램
+
+        
+        8p. UDP 손실 복구 프로그램
+
+
+
+        19p. 서버-클라이언트 통합 UDP 프로그램
+
+parser.add_argument('-pr', type=float, default=0, help='dropping probability (0~1)')
+parser.add_argument('-cnt', type=int, default=10, help='number of sending packets')
+
+위처럼 '-prob', '-count' 대신 -'pr', '-cnt' 줘도 잘 동작함.
+
+
+        27p. struct 모듈
+
+26p. 그대로 클래스를 사용하면 에러 발생 -> struct 모듈 사용 필요!
+
+struct 모듈: 이진 데이터를 bytes로 만들거나(pack), bytes를 이진 데이터로 해석(unpack)하기 위한 모듈
+
+ex) struct.pack('!h', 10)
+    ===> b'000a'
+
+        30p.
+실제 네트워크에 보낼 때 (빅 엔디언)
+
+struct.pack('!hhI', 1, 2, 3)  == ( hhI => 2, 2, 4바이트)
+b'\x00\x01\x02\x00\x00\x00\x00\x03
+
+
+        31p.
+ip에서 부호는 의미 없으므로 unsigned 써야함. (대문자!!!!!)
+
+밑에 saddr, daddr는 이미 inet_aton()에 의해 네트워크 순서 바이트 순서로 바뀌어있기 때문에 !4s로 해주면 된다 (char형)
+
+
+        33p. DNS 클라이언트 만들기
+    *** UDP, 53번 포트 사용!
+www.google.co.kr 에서 ' . (점)' 을 기준으로 나누고, 각 글자수를 앞에 채우고 해당하는 ascii 코드를 적음
+ex) 03 77 77 77 (w: 77) 06 67 6f 6f 67 6c 65 (google)
+마지막 kr 뒤에 00 을 적고  A 타입인 00 01 00 01 적는다? ㅇㅅㅇ;
+
+
+        34p. 에서
+c0 03: queries를 가리키는 포인터
+
+c0 03 다음부터, 
+00 01: type A
+00 01: class Internet
+그 다음 4bytes: time to live
+그 다음 2bytes: data length (00 04)
+그 다음 우리가 원하는 ip (4바이트)
+  ==> 'ac d9 ae 63'

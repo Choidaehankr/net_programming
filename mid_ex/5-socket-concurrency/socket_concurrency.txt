@@ -1,0 +1,26 @@
+        7p. TCP 멀티스레드 서버
+
+    1. 함수로 정의하고 스레드로 실행
+
+def func(arguments)  # 메인 스레드에서 실행할 함수
+
+t = threading.Thread(target=func, args=(arguments))
+
+target=func: 스레드가 실행할 함수 이름
+args=(arguments): 함수로 전달할 인수
+
+
+    2. threading.Thread 파생 클래스를 생성하고 run() 메소드 재정의
+
+class sub_class(threading.Thread):
+    def __init__(self, args):   (args: 클래스 객체를 생성할 떄 전달받은 인수)
+        threading.Thread.__init__(self)  # 부모 클래스의 초기화 함수를 먼저 호출
+    
+    def run(self):  # 스레드가 시작되면 run() 함수 실행
+
+
+-t = sub_class(args)  # 클래스 객체를 생성하고 인수 전달
+-t.daemon = True  # 메인 스레드가 종료되면 서브 스레드도 종료. 
+---> 보통 메인 스레드가 죽어도 서브 스레드는 안죽음. (default = False)
+-t.start()  # 스레드 시작
+
