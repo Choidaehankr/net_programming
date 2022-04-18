@@ -24,3 +24,125 @@ class sub_class(threading.Thread):
 ---> 보통 메인 스레드가 죽어도 서브 스레드는 안죽음. (default = False)
 -t.start()  # 스레드 시작
 
+
+
+        11p. 경쟁 상태
+
+해결 방법: "LOCK" 걸기
+
+
+        13p. LOCK 클래스 사용자
+
+-acquire(): 임계구역 진입을 위한 'lock'을 획득
+ : 다른 스레드가 'lock'을 가지고 있는 경우, 'lock'을 반납할 때까지 대기.
+-release(): 임계구역 종료 후 'lock'을 반납
+-1개의 스레드가 'lock'을 획득하면, 다른 스레드들은 'lock'이 반납될때까지 공유 자원에 접근 모탐
+
+
+        15p. 멀티스레드 서버
+
+
+        19p. 멀티스레드 TCP 채팅 프로그램 만들기
+
+기존 채팅 프로그램은 한번씩 번갈아 가면서 채팅해야함.
+ -해결 방법: [사용자 입력을 받아 전송하는 부분]과, [메시지를 수신하는 부분]을 별도 스레드로 구현
+
+
+
+
+        29p. 공유 자원을 사용하는 프로그램
+
+    시나리오
+ - 2개의 클라이언트가 동시에 접속
+ - 서버는 각 클라이언트를 별도 스레드로 처리
+ - 각 스레드는 sharedData를 동시에 접근
+ - 경쟁 상태 발생!
+
+
+        33p. Blocking/Non-Blockingm Synchronous/Asynchronous
+
+    Blocking/Non-Blocking
+: 바로 리턴하면 Non-Blocking / 바로 리턴하지 않으면 Blocking
+
+    Synchronous/Asynchronous
+: 호출되는 함수의 작업 완료를 호출한 함수가 신경쓰면 Synchronous / 호출된 함수면 Asynchronous
+
+-send/recv는 상대방 연결을 기다리고, 호출한 함수가 답이 오는걸 기다려야 하므로 Blocking+Synchronous
+    : 바로 리턴하지 않고, 호출한 함수가 신경씀
+-send/recv(O_NONBLOCK)은 Non-Blocking+Synchronous...호출 될 때마다 바로 리턴한다(답이 오지 않았어도 = 미완)
+    : 바로 리턴하면서, 호출한 함수가 신경씀
+-I/O Multiplexing (select)는 뭐 값이 오는걸 기다리는 동안 호출한 함수는 지 할거하고, 답 오면 넘겨주는듯?
+    : 바로 리턴하지 않으면서, 호출된 함수가 신경씀
+-asyncio: 호출하는 놈이 callback함수와 함께 호출하고 지 할거한다. 이후 답이 오면 callback함수로 답을 넘겨준다
+    : 바로 리턴하고, 호출된 함수가 신경씀
+
+
+        35p. select() 함수
+: 입출력(파일 또는 소켓)은 비동기적으로 이루어지므로, 응답이 올 때까지 기다리는 블로킹 입출력은 비효율적임
+
+-select()
+: 여러개의 소켓(또는 파일)에 대해 비동기 I/O를 지원하는 함수
+
+
+        37p.
+**** select()
+: socket.socket()에 옵션 안주면 기본적으로 TCP
+--> 처음에는 서버 소켓. s_sock만  socks에 들어있음.
+새로운 클라이언트 연결이 들어오면, select에서 읽은다음 r_sock에 넣어서 for-loop를 돔
+for-loop를 돌면서 현재 s == s_sock, 즉, 서버 소켓일 경우, accept()로 들어온 클라이언트와 연결할
+새로운 소켓을 만들어서 socks에 append.........? 흠 ㅇㅅㅇ
+
+서버 소켓일 때는 accept해서 추가해주고, 아닐 때는 else:문으로 들어가서 하고싶은 동작을 구현하면 됨
+
+
+        41p. selector 모듈
+: 특정 객체(소켓)에서 발생하는 이벤트와, 이벤트 발생 시 실행될 callback 함수를 등록
+: 이벤트 발생 여부를 확인하여, 이벤트 발생 시 해당 callback 함수를 호출
+
+    사용 방법
+import selectors
+sel = selectors.DefaultSelector()
+    : DefaultSelector = 걍 이거 쓰셈 ㅇㅂㅇ
+
+    사용 예제
+sel.register(fileobj, events, data=None)
+ -fileobj: 감시할 객체(소켓)
+ -events: 감시할 이벤트(읽기 또는 쓰기 가능 여부 감시)
+    -selectors.EVENT_READ: 읽기 가능 여부 감시
+    -EVENT_WRITE: 쓰기 가능 여부
+- data: 이벤트 발생 시 반환할 데이터 값. 일반적으로 callback 함수 등록
+
+    예시: sel.register(sock, selectors.EVENT_READ, accept)
+: sock 소켓에서 읽기 가능 이벤트(데이터 수신)이 발생하는 것을 감시하고, 이벤트 발생 시 accept를 반환하도록 이벤트 처리기에 등록
+
+
+    이벤트 발생 여부 검사
+events = sel.select([timeout=None])
+    -timeout: 최대 대기 기간
+        : 기본 값은 None, 감시 이벤트 발생할 떄까지 블로킹됨
+    -events: 발생한 이벤트 당 (key, mask) 튜플의 리스트를 반환
+        : key = (fileobj, data) 튜플  
+            ==> fileobj: 등록해놓은 객체(소켓), data: 이벤트 발생 시 반환하는 값
+        : mask = 발생한 이벤트의 종류 (EVENT_READ, EVENT_WRITE)
+
+
+        43p. 기타 함수
+
+sel.unregister(fileobj)
+ : 이벤트 처리기에 등록된 객체(소켓)을 등록 해지하고, 감시에서 삭제함
+ : 소켓을 닫기 전에 반드시 삭제
+
+    
+
+즉, select() 함수나 selector 모듈이나 똑같이 서버에서 관리하는 소켓을 전부 관리하는게 최종 목표
+-select()는 감시하고 싶은 소켓 list를 인자로 줘서 관리
+-selector 모듈은 각각을 이벤트로 관리해서 각각을 그때 그때 소켓을 이벤트로 등록하면, 등록된 애들을 다 감시
+ -> 어떤 이벤트가 발생했는지는 둘다 select()를 호출하면 되는데, select()는 결과적으로'
+ --> 준비된 소켓 리스트가 오니까 그 소켓을 보고 적절하게 행동하면 되고
+ ---> selectors는 리턴 타입 자체가 해당 되는 소켓이랑 콜백 정보가 같이오기 때문에 그거에 따라서 할 일을 짜면 됨.
+
+
+ 따라서 우리가 동작을 구현하려면 def read() 부분만 수정하면 된다.
+ accept는 연결시켜주는 거고, 클라이언트가 돌아가게 하는 부분이 read() 이므로,
+
+ 
