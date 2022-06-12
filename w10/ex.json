@@ -1,0 +1,16 @@
+{
+    "firstName": "Daehan",
+    "lastName": "Choi",
+    "hobbies": ["Youtube", "LoL", "Soju"],
+    "champion": [
+        {
+            "name": "Kysar",
+            "level": 7
+        },
+        {
+            "name": "Ezreal",
+            "level": 7,
+            "skin": "Samsung Galaxy"
+        }
+    ]
+}
