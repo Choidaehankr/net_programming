@@ -7,7 +7,7 @@ async def download_site(session, url):
         print("Read {0} from {1}".format(response.content_length, url))
 
 async def download_all_sites(sites):
-    async with aiohttp.CleintSession() as session:
+    async with aiohttp.ClientSession() as session:
         tasks = []
         for url in sites:
             task = asyncio.create_task(download_site(session, url))
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         "https://www.google.co.kr",
     ] * 80
     start_time = time.time()
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(download_all_sites(sites))
     duration = time.time() - start_time
     print(f"Download {len(sites)} in {duration} seconds")

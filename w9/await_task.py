@@ -16,7 +16,6 @@ async def main():
     # task2 = asyncio.create_task(mul(3, 4))
     # await task1
     # await task2
-    1
     # 동일한 작업 1
     # await asyncio.gather(task1, task2)
 
